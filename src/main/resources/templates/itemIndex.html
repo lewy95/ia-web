@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>试题指标</title>
+    <!-- 引入 ECharts 文件 -->
+    <script src="webjars/jquery/3.3.1/jquery.js"></script>
+    <script src="webjars/echarts/4.1.0-release/dist/echarts.common.js"></script>
+</head>
+<body>
+<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+<div id="nanduPie"
+     style="width: 600px;height:400px;position:absolute;top:50%;left: 50%;margin-top: -200px;margin-left: -300px;"></div>
+
+<script type="text/javascript">
+
+    $(function () {
+        getItemNandu();
+    });
+
+    function getItemNandu() {
+        $.ajax({
+            type: 'get',
+            dataType: 'text',
+            url: '/iaw/item/nandu',
+            data: {},
+            cache: false,
+            async: true,
+            success: function (data) {
+                //console.log(data);
+                var xqo = eval('(' + data + ')');
+                var data1 = new Array(String);
+                var data2 = new Array(String);
+                var comment = null;
+                for(var i in xqo){
+                    console.log(xqo[i].ndcode);
+                    if (xqo[i].ndcode === 0) {
+                        comment= "难度太大(0.0至0.2)";
+                    } else if (xqo[i].ndcode === 2) {
+                       comment = "难度较大(0.2至0.4)";
+                    } else if (xqo[i].ndcode === 4) {
+                        comment = "难度中等(0.4至0.6)";
+                    } else if (xqo[i].ndcode === 6) {
+                        comment = "难度较小(0.6至0.8)";
+                    } else if (xqo[i].ndcode === 8) {
+                        comment = "难度太小(0.8至1.0)";
+                    }
+                    data1[i] = {name:comment};
+                    data2[i] = {value:xqo[i].value, name:comment};
+                }
+                console.log(data1);
+                console.log(data2);
+
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('nanduPie'));
+
+                var option = {
+                    title: {
+                        text: '试题难度指标',
+                        subtext: 'every item nandu',
+                        x: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: data1
+                    },
+                    series: [
+                        {
+                            name: '难度分布',
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['50%', '60%'],
+                            data: data2,
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
