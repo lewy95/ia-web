@@ -20,14 +20,24 @@ public class ItemService {
     /**
      * 获取不同难度范围的试题数目
      * @param startPoint 难度指标开始点
-     * @param ensPoint 难度指标结束点
+     * @param endPoint 难度指标结束点
      * @param paperCode 试卷id
-     * @param createTime 创建世界
+     * @param createTime 创建时间
      * @return 记录数
      */
-    public int getNandeScale(double startPoint, double ensPoint, String paperCode, String createTime) {
-        return itemDao.getNanduScale(startPoint, ensPoint, paperCode, createTime);
+    public int getNanduScale(double startPoint, double endPoint, String paperCode, String createTime) {
+        return itemDao.getNanduScale(startPoint, endPoint, paperCode, createTime);
     }
 
-
+    /**
+     * 获取不同难度范围的试题数目
+     * @param startPoint 难度指标开始点
+     * @param endPoint 难度指标结束点
+     * @param paperCode 试卷id
+     * @param createTime 创建时间
+     * @return 记录数
+     */
+    public int getQufenduScale(double startPoint, double endPoint, String paperCode, String createTime) {
+        return itemDao.getQufenduScale(startPoint, endPoint, paperCode, createTime);
+    }
 }

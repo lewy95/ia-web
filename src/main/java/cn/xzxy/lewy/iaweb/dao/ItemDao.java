@@ -17,4 +17,10 @@ public interface ItemDao extends JpaRepository<ItemIndex, ItemIndexMultiKey> {
                       @Param("paperCode") String paperCode,
                       @Param("createTime") String createTime);
 
+    @Query(value = "select count(*) num from t_item_index where qufendu between :si and :ei and paper_code =:paperCode and create_time =:createTime",
+            nativeQuery = true)
+    int getQufenduScale(@Param("si") double startPoint,
+                        @Param("ei") double endPoint,
+                        @Param("paperCode") String paperCode,
+                        @Param("createTime")String createTime);
 }
