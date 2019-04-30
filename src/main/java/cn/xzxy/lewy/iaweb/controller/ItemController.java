@@ -2,11 +2,12 @@ package cn.xzxy.lewy.iaweb.controller;
 
 import cn.xzxy.lewy.iaweb.pojo.ItemIndex;
 import cn.xzxy.lewy.iaweb.service.ItemService;
-import org.springframework.beans.factory.annotation.Autowired;
+import cn.xzxy.lewy.iaweb.service.SubmissionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.Map;
 @RequestMapping("/item")
 public class ItemController {
 
-    @Autowired
+    @Resource
     ItemService itemService;
 
     @GetMapping(value = "/records")
@@ -85,4 +86,5 @@ public class ItemController {
         }
         return listMap;
     }
+
 }

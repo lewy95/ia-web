@@ -2,15 +2,15 @@ package cn.xzxy.lewy.iaweb.service;
 
 import cn.xzxy.lewy.iaweb.dao.ItemDao;
 import cn.xzxy.lewy.iaweb.pojo.ItemIndex;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 public class ItemService {
 
-    @Autowired
+    @Resource
     ItemDao itemDao;
 
     public List<ItemIndex> getAllItems() {
