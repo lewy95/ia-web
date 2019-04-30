@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <title>Submission List</title>
+    <!-- Bootstrap core CSS -->
+    <link href="#" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet"/>
+    <link href="#" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<!--引入抽取的topbar-->
+<!--模板名：会使用thymeleaf的前后缀配置规则进行解析-->
+<div th:replace="commons/bar::topbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--引入侧边栏-->
+        <div th:replace="commons/bar::sidebar(activeUri='submissions')"></div>
+
+        <!-- 未处理的试卷 -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>这是您未处理的试卷</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                    <tr>
+                        <th>试卷编号</th>
+                        <th>试卷名称</th>
+                        <th>试卷科目</th>
+                        <th>备注</th>
+                        <th>提交时间</th>
+                        <th>处理状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="sbm:${submissions0}">
+                        <td th:text="${sbm.paper.paperCode}"></td>
+                        <td th:text="${sbm.paper.paperName}"></td>
+                        <td th:text="${sbm.paper.paperMajor}"></td>
+                        <td th:text="${sbm.comments}"></td>
+                        <!--<td th:text="${sbm.submitTime}"></td>-->
+                        <td th:text="${#dates.format(new java.util.Date(new Long(sbm.submitTime)),'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td>未处理</td>
+                        <td>
+                            <!--<a class="btn btn-sm btn-primary" th:href="@{/emp/}+${emp.id}">编辑</a>-->
+                            <a class="btn btn-sm btn-info text-white">开始分析</a>
+                            <!--<button th:attr="del_uri=@{/emp/}+${emp.id}" class="btn btn-sm btn-danger deleteBtn">删除</button>-->
+                            <button class="btn btn-sm btn-danger deleteBtn">删除</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- 已处理的试卷 -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>这是您历史处理的试卷</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                    <tr>
+                        <th>试卷编号</th>
+                        <th>试卷名称</th>
+                        <th>试卷科目</th>
+                        <th>备注</th>
+                        <th>提交时间</th>
+                        <th>处理状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="sbm:${submissions1}">
+                        <td th:text="${sbm.paper.paperCode}"></td>
+                        <td th:text="${sbm.paper.paperName}"></td>
+                        <td th:text="${sbm.paper.paperMajor}"></td>
+                        <td th:text="${sbm.comments}"></td>
+                        <td th:text="${#dates.format(new java.util.Date(new Long(sbm.submitTime)),'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td>已处理</td>
+                        <td>
+                            <a class="btn btn-sm btn-success text-white">查看详情</a>
+                            <button class="btn btn-sm btn-danger deleteBtn">删除</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <ul class="pagination pagination-lg">
+                    <li><a th:href="@{/submissions(start=0)}">首页</a>&nbsp;&nbsp;</li>
+                    <li><a th:if="${not submissions1.isFirst()}" th:href="@{/submissions(start=${submissions1.number - 1})}">上一页</a>&nbsp;&nbsp;</li>
+                    <li><a th:if="${not submissions1.isLast()}" th:href="@{/submissions(start=${submissions1.number + 1})}">下一页</a>&nbsp;&nbsp;</li>
+                    <li><a th:href="@{/submissions(start=${submissions1.totalPages - 1})}">末页</a></li>
+                </ul>
+            </div>
+        </main>
+
+        <!--
+        <form id="deleteEmpForm"  method="post">
+            <input type="hidden" name="_method" value="delete"/>
+        </form>
+        -->
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="#" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+<script type="text/javascript" src="#" th:src="@{/webjars/popper.js/1.11.1/dist/umd/popper.js}"></script>
+<script type="text/javascript" src="#" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+
+<!-- Icons -->
+<script type="text/javascript" src="#" th:src="@{/asserts/js/feather.min.js}"></script>
+<script>
+    feather.replace()
+</script>
+<!--
+<script>
+    $(".deleteBtn").click(function(){
+        //删除当前员工
+        $("#deleteEmpForm").attr("action",$(this).attr("del_uri")).submit();
+        return false;
+    });
+</script>
+-->
+</body>
+</html>
