@@ -29,4 +29,8 @@ public class SubmissionService {
         Pageable pageable = new PageRequest(start, limit, Sort.Direction.DESC, "submitTime");
         return submissionDao.findByUserIdAndStatusno(userId, status, pageable);
     }
+
+    public Submission getById(Integer id) {
+        return submissionDao.getOne(id);
+    }
 }

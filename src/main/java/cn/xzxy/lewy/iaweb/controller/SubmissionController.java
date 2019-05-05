@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
@@ -35,4 +36,15 @@ public class SubmissionController {
         //classpath:/templates/xxx.html
         return "submission/list";
     }
+
+    @GetMapping("/submission/{id}")
+    public String showITDetail(@PathVariable("id") Integer id, Model model){
+
+        Submission submission = submissionService.getById(id);
+        System.out.println(submission.toString());
+        model.addAttribute("subItem",submission);
+
+        return "item/index";
+    }
+
 }

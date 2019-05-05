@@ -1,44 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>试题指标</title>
-    <!-- 引入 ECharts 文件 -->
-    <script src="webjars/jquery/3.3.1/jquery.js"></script>
-    <script src="webjars/echarts/4.1.0-release/dist/echarts.common.js"></script>
+
+    <script type="text/javascript" src="#" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+    <script type="text/javascript" src="#" th:src="@{/webjars/echarts/4.1.0-release/dist/echarts.common.js}"></script>
+    <script type="text/javascript" src="#" th:src="@{/webjars/popper.js/1.11.1/dist/umd/popper.js}"></script>
+    <script type="text/javascript" src="#" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+
+    <link href="#" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet"/>
+    <link href="#" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet"/>
 </head>
 <body>
-<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-<div id="nanduPie"
-     style="width: 600px;height:400px;"></div>
+<!--引入抽取的topbar-->
+<!--模板名：会使用thymeleaf的前后缀配置规则进行解析-->
+<div th:replace="commons/bar::topbar"></div>
 
-<div id="qufenduPie"
-     style="width: 600px;height:400px;"></div>
+<div class="container-fluid">
+    <div class="row">
+        <!--引入侧边栏-->
+        <div th:replace="commons/bar::sidebar(activeUri='submissions')"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <!-- 隐藏域传值 -->
+            <input id="iph1" type="hidden" name="paperCode" th:value="${subItem.getPaper().paperCode}"/>
+            <input id="iph2" type="hidden" name="createTime" th:value="${subItem.submitTime}"/>
+            <h2>这是您查看的试卷</h2>
+            <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+            <div id="nanduPie"
+                 style="width: 600px;height:400px;"></div>
+
+            <div id="qufenduPie"
+                 style="width: 600px;height:400px;"></div>
+        </main>
+    </div>
+</div>
 
 <script type="text/javascript">
 
     $(function () {
-        getItemNandu();
-        getItemQufendu();
-
+        //获取隐藏域中的试卷编号和提交时间
+        var pcode = $("#iph1[name='paperCode']").val();
+        console.log(pcode);
+        var ctime = $("#iph2[name='createTime']").val();
+        console.log(ctime);
+        var source = {"paperCode":pcode, "createTime":ctime};
+        //console.log(source);
+        //难度展示
+        getItemNandu(source);
+        //区分度展示
+        getItemQufendu(source);
     });
 
-    function getItemNandu() {
+    function getItemNandu(source) {
+
         $.ajax({
             type: 'get',
             dataType: 'text',
             url: '/iaw/item/nandu',
-            data: {},
+            data: source,
             cache: false,
             async: true,
-            success: function (data) {
+            success: function (result) {
                 //console.log(data);
-                var xqo = eval('(' + data + ')');
+                var xqo = eval('(' + result + ')');
                 var data1 = new Array(String);
                 var data2 = new Array(String);
                 var comment = null;
                 for(var i in xqo){
-                    console.log(xqo[i].ndcode);
+                    //console.log(xqo[i].ndcode);
                     if (xqo[i].ndcode === 0) {
                         comment= "难度太大(0.0至0.2)";
                     } else if (xqo[i].ndcode === 2) {
@@ -53,8 +84,8 @@
                     data1[i] = {name:comment};
                     data2[i] = {value:xqo[i].value, name:comment};
                 }
-                console.log(data1);
-                console.log(data2);
+                //console.log(data1);
+                //console.log(data2);
 
                 // 基于准备好的dom，初始化echarts实例
                 var myChart = echarts.init(document.getElementById('nanduPie'));
@@ -97,22 +128,22 @@
         });
     }
 
-    function getItemQufendu() {
+    function getItemQufendu(source) {
         $.ajax({
             type: 'get',
             dataType: 'text',
             url: '/iaw/item/qufendu',
-            data: {},
+            data: source,
             cache: false,
             async: true,
-            success: function (data) {
+            success: function (result) {
                 //console.log(data);
-                var xqo = eval('(' + data + ')');
+                var xqo = eval('(' + result + ')');
                 var data1 = new Array(String);
                 var data2 = new Array(String);
                 var comment = null;
                 for(var i in xqo){
-                    console.log(xqo[i].qfdcode);
+                    //console.log(xqo[i].qfdcode);
                     if (xqo[i].qfdcode === 1) {
                         comment= "区分度(-∞,0.2)";
                     } else if (xqo[i].qfdcode === 2) {
@@ -125,8 +156,8 @@
                     data1[i] = {name:comment};
                     data2[i] = {value:xqo[i].value, name:comment};
                 }
-                console.log(data1);
-                console.log(data2);
+                //console.log(data1);
+                //console.log(data2);
 
                 // 基于准备好的dom，初始化echarts实例
                 var myChart = echarts.init(document.getElementById('qufenduPie'));
@@ -169,6 +200,11 @@
         });
     }
 
+</script>
+<!-- Icons -->
+<script type="text/javascript" src="#" th:src="@{/asserts/js/feather.min.js}"></script>
+<script>
+    feather.replace()
 </script>
 </body>
 </html>

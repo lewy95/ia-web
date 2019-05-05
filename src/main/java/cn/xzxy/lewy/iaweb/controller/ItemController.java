@@ -2,9 +2,9 @@ package cn.xzxy.lewy.iaweb.controller;
 
 import cn.xzxy.lewy.iaweb.pojo.ItemIndex;
 import cn.xzxy.lewy.iaweb.service.ItemService;
-import cn.xzxy.lewy.iaweb.service.SubmissionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -30,9 +30,10 @@ public class ItemController {
      * 获取不同难度范围的试题数目
      */
     @GetMapping(value = "/nandu")
-    public List<Map<String, Integer>> getNanduScale() {
-        String paperCode = "915003";
-        String createTime = "1555355855023";
+    public List<Map<String, Integer>> getNanduScale(@RequestParam String paperCode,
+                                                    @RequestParam String createTime) {
+        //String paperCode = "915003";
+        //String createTime = "1555355855023";
         List<Map<String, Integer>> listMap = new ArrayList<>();
         int count;
         int nc;
@@ -54,9 +55,10 @@ public class ItemController {
      * 获取不同难度范围的试题数目
      */
     @GetMapping(value = "/qufendu")
-    public List<Map<String, Integer>> getQufenduScale() {
-        String paperCode = "915003";
-        String createTime = "1555355855023";
+    public List<Map<String, Integer>> getQufenduScale(@RequestParam String paperCode,
+                                                      @RequestParam String createTime) {
+        //String paperCode = "915003";
+        //String createTime = "1555355855023";
         List<Map<String, Integer>> listMap = new ArrayList<>();
         int count;
         int nc;
