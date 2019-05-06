@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>试题指标</title>
+    <title>Item Index</title>
 
     <script type="text/javascript" src="#" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
     <script type="text/javascript" src="#" th:src="@{/webjars/echarts/4.1.0-release/dist/echarts.common.js}"></script>
@@ -28,11 +28,57 @@
             <input id="iph2" type="hidden" name="createTime" th:value="${subItem.submitTime}"/>
             <h2>这是您查看的试卷</h2>
             <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+            <h4>第一部分：学生得分情况</h4>
+            <br/>
+            <h4>第二部分：试题指标情况</h4>
+            <!-- 难度分布 -->
             <div id="nanduPie"
-                 style="width: 600px;height:400px;"></div>
-
+                 style="width: 600px;height:400px; margin: 0 auto;"></div>
+            <!-- 区分度分布 -->
             <div id="qufenduPie"
-                 style="width: 600px;height:400px;"></div>
+                 style="width: 600px;height:400px; margin: 0 auto;"></div>
+            <br/>
+            <h4>第三部分：试题关联性分析结果</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                    <tr>
+                        <th>前序知识点</th>
+                        <th>后序知识点</th>
+                        <th>置信度</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="fpg:${fpgInfos}">
+                        <td th:text="${fpg.preOrder}"></td>
+                        <td th:text="${fpg.sufOrder}"></td>
+                        <td th:text="${fpg.confidence}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br/>
+            <h4>第三部分：聚类分析结果</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm" style="table-layout:fixed;word-break:break-all;">
+                    <thead>
+                    <tr>
+                        <th width="10%">簇序号</th>
+                        <th width="60%">学生学号</th>
+                        <th width="15%">擅长试题</th>
+                        <th width="15%">不擅长试题</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="clus:${clusters}">
+                        <td th:text="${#strings.substring(clus.centers,0,1)}"></td>
+                        <td th:text="${clus.stuCode}"></td>
+                        <td th:text="${clus.goodItem}"></td>
+                        <td th:text="${clus.badItem}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </main>
     </div>
 </div>

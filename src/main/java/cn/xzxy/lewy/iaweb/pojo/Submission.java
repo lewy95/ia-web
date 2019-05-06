@@ -74,4 +74,16 @@ public class Submission {
     public void setStatusno(Integer statusno) {
         this.statusno = statusno;
     }
+
+    @Override
+    public String toString() {
+        return "Submission{" +
+                "id=" + id +
+                ", comments='" + comments + '\'' +
+                ", statusno=" + statusno +
+                ", submitTime='" + submitTime + '\'' +
+                ", paper=" + paper +
+                ", user=" + user +
+                '}';
+    }
 }

@@ -6,7 +6,7 @@ public class SubmitJobToSpark {
 
     public static void submitJob() {
         String[] args = new String[]{
-                //注意：master的端口要指定为通信端口(默认7077)为不要指定web端口(默认8080)
+                //注意：master的端口要指定为通信端口(默认7077)而不要指定web端口(默认8080)
                 "--master", "spark://hadoop01:7077",
                 "--name", "test java submit job to spark",
                 "--class", "cn.xzxy.yjt.demo.MaxMin",
