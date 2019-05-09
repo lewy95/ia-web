@@ -1,7 +1,9 @@
 package cn.xzxy.lewy.iaweb.controller;
 
 import cn.xzxy.lewy.iaweb.pojo.ItemIndex;
+import cn.xzxy.lewy.iaweb.pojo.TotalScore;
 import cn.xzxy.lewy.iaweb.service.ItemService;
+import cn.xzxy.lewy.iaweb.service.TotalScoreService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +21,9 @@ public class ItemController {
 
     @Resource
     ItemService itemService;
+
+    @Resource
+    TotalScoreService totalScoreService;
 
     @GetMapping(value = "/records")
     public List<ItemIndex> getAllItems() {
@@ -86,6 +91,30 @@ public class ItemController {
             listMap.add(map);
             si += 0.1;
         }
+        return listMap;
+    }
+
+    /**
+     * 获取不同范围的总分数目
+     */
+    @GetMapping(value = "/totalScore")
+    public List<Map<String, Integer>> getScoreScale(@RequestParam String paperCode,
+                                                    @RequestParam String createTime) {
+        //String paperCode = "915003";
+        //String createTime = "1555355855023";
+        List<Map<String, Integer>> listMap = new ArrayList<>();
+        int count = 0;
+        int start = 0;
+        int end = 0;
+        while(start < 100){
+            end = start + 10;
+            count = totalScoreService.getCountByPCodeAndCreate(start, end, paperCode, createTime);
+            start += 10;
+            Map<String, Integer> map = new HashMap<>();
+            map.put("tsCount", count);
+            listMap.add(map);
+        }
+
         return listMap;
     }
 

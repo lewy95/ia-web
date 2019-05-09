@@ -1,21 +1,17 @@
 package cn.xzxy.lewy.iaweb.controller;
 
-import cn.xzxy.lewy.iaweb.pojo.ItemCluster;
-import cn.xzxy.lewy.iaweb.pojo.ItemFpg;
-import cn.xzxy.lewy.iaweb.pojo.Submission;
-import cn.xzxy.lewy.iaweb.service.ItemClusterService;
-import cn.xzxy.lewy.iaweb.service.ItemFpgService;
-import cn.xzxy.lewy.iaweb.service.SubmissionService;
+import cn.xzxy.lewy.iaweb.pojo.*;
+import cn.xzxy.lewy.iaweb.service.*;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class SubmissionController {
@@ -28,6 +24,12 @@ public class SubmissionController {
 
     @Resource
     ItemClusterService itemClusterService;
+
+    @Resource
+    PaperIndexService paperIndexService;
+
+    @Resource
+    KnowledgeService knowledgeService;
 
     //分页展示
     @GetMapping("/submissions")
@@ -60,6 +62,10 @@ public class SubmissionController {
         String paperCode = submission.getPaper().getPaperCode();
         String createTime = submission.getSubmitTime();
 
+        //获取整张试卷的指标
+        PaperIndex pi = paperIndexService.getByPCodeAndCreate(paperCode, createTime);
+        model.addAttribute("paperIndex", pi);
+
         //获取推荐规则
         List<ItemFpg> itemFpgs =
                 itemFpgService.getByPCodeAndCreate(paperCode, createTime);
@@ -72,6 +78,12 @@ public class SubmissionController {
         return "item/index";
     }
 
+    /**
+     * 获取聚类结果
+     * @param paperCode 试卷编号
+     * @param createTime 创建时间
+     * @return map
+     */
     private List<ItemCluster> getClusterMap(String paperCode, String createTime) {
         List<ItemCluster> clusterMap = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
@@ -84,8 +96,11 @@ public class SubmissionController {
 
             ItemCluster newIc = new ItemCluster();
             newIc.setStuCode(sb.toString());
-            newIc.setGoodItem(ics.get(0).getGoodItem());
-            newIc.setBadItem(ics.get(0).getBadItem());
+            //处理试题序号转换为知识点
+            String gIsb =  transferItem(ics.get(0).getGoodItem(), paperCode);
+            String bIsb =  transferItem(ics.get(0).getBadItem(), paperCode);
+            newIc.setGoodItem(gIsb);
+            newIc.setBadItem(bIsb);
             newIc.setCenters(ics.get(0).getCenters());
 
             clusterMap.add(newIc);
@@ -93,4 +108,24 @@ public class SubmissionController {
         return clusterMap;
     }
 
+    /**
+     * 转换聚类分析的试题号为知识点
+     * @param itemNums 试题号
+     * @param paperCode 试卷编号
+     * @return sb
+     */
+    private String transferItem(String itemNums, String paperCode) {
+
+        StringBuilder sb = new StringBuilder();
+        if (!itemNums.equals("")){
+            String[] its = itemNums.split(",");
+            for (String it : its) {
+                Knowledge kl = knowledgeService.getOneById(Integer.parseInt(it), paperCode);
+                sb.append(kl.getKlContent()).append("-").append(it).append(";");
+            }
+            return sb.deleteCharAt(sb.length() -1).toString();
+        } else {
+            return "无";
+        }
+    }
 }
