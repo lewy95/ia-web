@@ -16,4 +16,16 @@ public class PaperService {
     public List<Paper> getAll() {
         return paperDao.findAll();
     }
+
+    public void savePaper(Paper paper) {
+        paperDao.save(paper);
+    }
+
+    public Paper getById(Integer id) {
+        return paperDao.getOne(id);
+    }
+
+    public void deleteById(Integer id) {
+        paperDao.delete(id);
+    }
 }

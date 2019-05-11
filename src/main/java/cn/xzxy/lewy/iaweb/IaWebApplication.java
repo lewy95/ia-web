@@ -13,7 +13,6 @@ public class IaWebApplication extends SpringBootServletInitializer {
         return builder.sources(IaWebApplication.class);
     }
 
-
     public static void main(String[] args) {
         SpringApplication.run(IaWebApplication.class, args);
     }
