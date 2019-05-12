@@ -17,18 +17,7 @@ public class ChangePageController {
     //后台访问首页跳转
     @GetMapping(value = "/home")
     public String home() {
-        return "redirect:cp2_order_list";
-    }
-
-    //试卷管理
-    @GetMapping(value = "/cp2_order_list")
-    public String listPaper() {
-        return "paper/listPaper";
-    }
-
-    @GetMapping(value = "/cp2_item_index")
-    public String showItemIndex() {
-        return "item/index";
+        return "redirect:toHomePage";
     }
 
     @RequestMapping("/hello")

@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -78,6 +77,5 @@ public class PaperController {
         paperService.deleteById(id);
         return "redirect:/papers";
     }
-
 
 }

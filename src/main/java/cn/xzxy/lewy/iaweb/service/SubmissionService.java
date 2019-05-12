@@ -33,4 +33,8 @@ public class SubmissionService {
     public Submission getById(Integer id) {
         return submissionDao.getOne(id);
     }
+
+    public void saveOne(Submission submission) {
+        submissionDao.save(submission);
+    }
 }

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <title>Paper Add</title>
+    <link href="#" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet"/>
+    <link href="#" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet"/>
+
+    <script type="text/javascript" src="#" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+    <script type="text/javascript" src="#" th:src="@{/webjars/popper.js/1.11.1/dist/umd/popper.js}"></script>
+    <script type="text/javascript" src="#" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+</head>
+
+<body>
+<!--引入抽取的topbar-->
+<!--模板名：会使用thymeleaf的前后缀配置规则进行解析-->
+<div th:replace="include/bar::topbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--引入侧边栏-->
+        <div th:replace="include/bar::sidebar(activeUri='toHomePage')"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>请在此填写试卷信息</h2>
+            <br/>
+            <br/>
+            <div class="col-md-12 col-xs-12 p10" align="center">
+                <div class="form-horizontal col-xs-4 col-lg-4">
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 p0">请选择您的试卷</label>
+                        <div class="col-xs-6">
+                            <!-- 提交的是试卷的id -->
+                            <select class="form-control" name="paper.id" id="paperInfoId">
+                                <option th:value="${pa.id}" th:each="pa:${papers}"
+                                        th:text="${pa.paperName}"></option>
+                            </select>
+                        </div>
+                        <span class="control-label col-xs-3 p0">还没有试卷，
+                                <span><a href="#" th:href="@{/paper}">点击创建</a></span>
+                            </span>
+                    </div>
+                </div>
+                <div class="form-horizontal col-xs-4 col-lg-4">
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 p0">请选择您的文件</label>
+                        <div class="input-group col-xs-6">
+                            <input id='location' class="form-control" placeholder="支持.txt格式"
+                                   onclick="$('#i-file').click();" style="height: 38px;"/>
+                            <label class="input-group-btn">
+                                <input type="button" id="i-check" value="浏览文件" class="btn btn-success"
+                                       onclick="$('#i-file').click();"/>
+                            </label>
+                        </div>
+                        <input type="file" name="file" id='i-file' accept=".txt"
+                               onchange="$('#location').val($('#i-file').val());" style="display: none"/>
+                    </div>
+                </div>
+                <div class="form-horizontal col-xs-4 col-lg-4">
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 p0">请填写您的备注</label>
+                        <div class="col-xs-6">
+                            <input name="comments" id="i-comment" type="text" class="form-control"
+                                   placeholder="comments"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="col-md-12 col-xs-12 p10" align="center">
+                <button type="submit" id="uld" class="btn btn-primary">确定上传</button>
+            </div>
+            <!--</form>-->
+        </main>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+
+        $("#uld").click(function () {
+
+            var inputId = $("#paperInfoId").val();
+            var inputComm = $("#i-comment").val();
+            var inputFile = $("#i-file").get(0).files[0];
+
+            if (inputFile == null) {
+                alert("请选择文件！");
+                return false;
+            }
+            if (inputComm === "") {
+                alert("请填写备注！");
+                return false;
+            }
+
+            var formData = new FormData();
+            formData.append("paperInfoId", inputId);
+            formData.append("comments", inputComm);
+            formData.append("file", inputFile);
+
+            //var source = {"paperInfoId":inputId,"comments":inputComm};
+
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: '/iaw/uploadData',
+                //url: '/packmas-web/uploadData',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                    console.log(result);
+                    if (result.status == "0") {
+                        alert(result.message);
+                    } else {
+                        alert(result.message);
+                    }
+                }
+            });
+        });
+    });
+
+</script>
+
+<!-- Icons -->
+<script type="text/javascript" src="#" th:src="@{/asserts/js/feather.min.js}"></script>
+<script>
+    feather.replace()
+</script>
+
+</body>
+
+</html>

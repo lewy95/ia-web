@@ -10,6 +10,7 @@ import javax.persistence.*;
 public class Submission {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String comments;

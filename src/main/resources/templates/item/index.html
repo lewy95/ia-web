@@ -15,12 +15,12 @@
 <body>
 <!--引入抽取的topbar-->
 <!--模板名：会使用thymeleaf的前后缀配置规则进行解析-->
-<div th:replace="commons/bar::topbar"></div>
+<div th:replace="include/bar::topbar"></div>
 
 <div class="container-fluid">
     <div class="row">
         <!--引入侧边栏-->
-        <div th:replace="commons/bar::sidebar(activeUri='submissions')"></div>
+        <div th:replace="include/bar::sidebar(activeUri='submissions')"></div>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <!-- 隐藏域传值 -->
@@ -140,7 +140,7 @@
             url: '/iaw/item/totalScore',
             //url: '/packmas-web/item/totalScore',
             data: source,
-            cache: false,
+            cache: true, //打开缓存
             async: true,
             success: function (result) {
                 console.log(result);
@@ -211,7 +211,7 @@
             url: '/iaw/item/nandu',
             //url: '/packmas-web/item/nandu',
             data: source,
-            cache: false,
+            cache: true,
             async: true,
             success: function (result) {
                 //console.log(data);
@@ -286,7 +286,7 @@
             url: '/iaw/item/qufendu',
             //url: '/packmas-web/item/qufendu',
             data: source,
-            cache: false,
+            cache: true,
             async: true,
             success: function (result) {
                 //console.log(data);
