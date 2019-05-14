@@ -2,7 +2,6 @@ package cn.xzxy.lewy.iaweb.controller;
 
 import cn.xzxy.lewy.iaweb.pojo.Paper;
 import cn.xzxy.lewy.iaweb.pojo.Submission;
-import cn.xzxy.lewy.iaweb.pojo.User;
 import cn.xzxy.lewy.iaweb.service.PaperService;
 import cn.xzxy.lewy.iaweb.service.SubmissionService;
 import cn.xzxy.lewy.iaweb.service.UserService;
@@ -58,13 +57,13 @@ public class CommonController {
         Submission submission = new Submission();
         submission.setStatusno(0);
         submission.setUser(userService.getById(1));
-        submission.setSubmitTime(String.valueOf(System.currentTimeMillis()));
         submission.setPaper(paper);
         submission.setComments(comment);
+        submission.setSubmitTime(String.valueOf(System.currentTimeMillis()));
 
         String fileName = paper.getPaperCode();
         //指定本地文件夹存储图片
-        String filePath = "D:\\mywanda\\";
+        String filePath = "/home/ofo/bishe/flume/";
         try {
             //将图片保存到static文件夹里
             fileUpload.transferTo(new File(filePath + fileName));

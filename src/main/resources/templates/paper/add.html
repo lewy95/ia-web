@@ -35,6 +35,7 @@
                 -->
                 <input type="hidden" name="_method" value="put" th:if="${paper!=null}"/>
                 <input type="hidden" name="id" th:if="${paper!=null}" th:value="${paper.id}"/>
+                <h5>试卷基本信息</h5>
                 <div class="form-inline col-md-12 col-xs-12 p10">
                     <div class="form-horizontal col-xs-4 col-lg-4">
                         <div class="form-group">
@@ -95,24 +96,41 @@
                             </div>
                         </div>
                     </div>
-                    <!--
-                    <div class="form-group">
-                        <label>department</label>
-                        提交的是部门的id
-                        <select class="form-control" name="department.id">
-                            <option th:selected="${emp!=null}?${dept.id == emp.department.id}" th:value="${dept.id}"
-                                    th:each="dept:${depts}" th:text="${dept.departmentName}">1
-                            </option>
-                        </select>
-                    </div>-->
-                    <!--
-                    <div class="form-group">
-                        <label>Birth</label>
-                        <input name="birth" type="text" class="form-control" placeholder="zhangsan"
-                               th:value="${emp!=null}?${#dates.format(emp.birth, 'yyyy-MM-dd HH:mm')}">
-                    </div>
-                    -->
                 </div>
+                <br/>
+                <h5>试卷题目信息&nbsp;&nbsp;&nbsp;<span class="control-label col-xs-3 p0">
+                        <a id="addItem" href="javascript:void(0);" style="font-size:15px;">添加条目</a></span></h5>
+                <div class="form-inline col-md-12 col-xs-12 p10">
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">题目类型&nbsp;</label>
+                            <div class="col-xs-6">
+                                <!-- 提交的是试卷类型的id -->
+                                <select class="form-control" name="part1Type">
+                                    <option th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试题数目&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part1Qty" type="text" class="form-control" placeholder="请输入试题数目"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试题分值&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part1Mark" type="text" class="form-control" placeholder="请输入试题得分"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div id="moreItem"></div>
                 <br/>
                 <div class="col-md-12 col-xs-12 p10" align="center">
                     <button type="submit" class="btn btn-primary" th:text="${paper!=null}?'修改':'添加'">添加</button>
@@ -128,6 +146,30 @@
 <script type="text/javascript" src="#" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
 <script type="text/javascript" src="#" th:src="@{/webjars/popper.js/1.11.1/dist/umd/popper.js}"></script>
 <script type="text/javascript" src="#" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#addItem").click(function () {
+            console.log("yes clicked");
+            $("#moreItem").append('<div class="form-inline col-md-12 col-xs-12 p10">' +
+                '<div class="form-horizontal col-xs-4 col-lg-4">' +
+                '<div class="form-group">' +
+                '<label class="control-label col-xs-3 p0">题目类型&nbsp;</label>' +
+                '<div class="col-xs-6">' +
+                '<select class="form-control" name="part2Type">' +
+                '<option th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option></select></div></div></div>' +
+                '<div class="form-horizontal col-xs-4 col-lg-4">' +
+                '<div class="form-group">' +
+                '<label class="control-label col-xs-3 p0">试题数目&nbsp;</label>' +
+                '<div class="col-xs-6">' +
+                '<input name="part2Qty" type="text" class="form-control" placeholder="请输入试题数目"/></div></div></div>' +
+                '<div class="form-horizontal col-xs-4 col-lg-4">' +
+                '<div class="form-group">' +
+                '<label class="control-label col-xs-3 p0">试题分值&nbsp;</label>' +
+                '<div class="col-xs-6">' +
+                '<input name="part2Mark" type="text" class="form-control" placeholder="请输入试题得分"/></div></div></div></div><br/>');
+        });
+    });
+</script>
 <!-- Icons -->
 <script type="text/javascript" src="#" th:src="@{/asserts/js/feather.min.js}"></script>
 <script>

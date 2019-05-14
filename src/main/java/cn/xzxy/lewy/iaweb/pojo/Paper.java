@@ -32,6 +32,18 @@ public class Paper {
     @Column(name = "paper_affiliate")
     private String paperAffiliate;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "pi_id",referencedColumnName = "id")
+    private PaperItem paperItem;
+
+    public PaperItem getPaperItem() {
+        return paperItem;
+    }
+
+    public void setPaperItem(PaperItem paperItem) {
+        this.paperItem = paperItem;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -86,5 +98,18 @@ public class Paper {
 
     public void setPaperAffiliate(String paperAffiliate) {
         this.paperAffiliate = paperAffiliate;
+    }
+
+    @Override
+    public String toString() {
+        return "Paper{" +
+                "id=" + id +
+                ", paperCode='" + paperCode + '\'' +
+                ", paperName='" + paperName + '\'' +
+                ", paperMajor='" + paperMajor + '\'' +
+                ", paperDesigner='" + paperDesigner + '\'' +
+                ", paperTesttime='" + paperTesttime + '\'' +
+                ", paperAffiliate='" + paperAffiliate + '\'' +
+                '}';
     }
 }
