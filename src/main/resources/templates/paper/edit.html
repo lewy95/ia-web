@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <title>Paper Edit</title>
+    <link href="#" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet"/>
+    <link href="#" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet"/>
+
+</head>
+
+<body>
+<!--引入抽取的topbar-->
+<!--模板名：会使用thymeleaf的前后缀配置规则进行解析-->
+<div th:replace="include/bar::topbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--引入侧边栏-->
+        <div th:replace="include/bar::sidebar(activeUri='papers')"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>请在此填写试卷信息</h2>
+            <br/>
+            <!--需要区分是修改还是添加；-->
+            <form th:action="@{/paper}" method="post">
+                <!--发送put请求修改数据-->
+                <!--
+                解决有的浏览器不支持put和delete请求的方法：
+                1、SpringMVC中配置HiddenHttpMethodFilter;（SpringBoot自动配置好的）
+                2、页面创建一个post表单
+                3、创建一个input项，name="_method";值就是我们指定的请求方式
+                -->
+                <input type="hidden" name="_method" value="put"/>
+                <input type="hidden" name="id" th:value="${paper.id}"/>
+                <input type="hidden" id="paperItemCount" th:value="${paper.paperItem.allItems}"/>
+                <input type="hidden" name="paperItem.id" th:value="${paper.paperItem.id}"/>
+                <h5>试卷基本信息</h5>
+                <div class="form-inline col-md-12 col-xs-12 p10">
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试卷编号&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="paperCode" type="text" class="form-control" readonly="readonly"
+                                       placeholder=""
+                                       th:value="${paper.paperCode}"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试卷名称&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="paperName" type="text" class="form-control" placeholder="请输入试卷名称"
+                                       th:value="${paper.paperName}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试卷科目&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="paperMajor" type="text" class="form-control" placeholder="请输入试卷科目"
+                                       th:value="${paper.paperMajor}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="form-inline col-md-12 col-xs-12 p10">
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">出题人名&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="paperDesigner" type="text" class="form-control" placeholder="请输入出题人姓名"
+                                       th:value="${paper.paperDesigner}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">考试时间&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="paperTesttime" type="text" class="form-control" placeholder="请输入考试时间"
+                                       th:value="${paper.paperTesttime}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">所属单位&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="paperAffiliate" type="text" class="form-control" placeholder="请输入所属单位"
+                                       th:value="${paper.paperAffiliate}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <h5>试卷题目信息&nbsp;&nbsp;&nbsp;<span class="control-label col-xs-3 p0">
+                        <a id="addItem" href="javascript:void(0);" style="font-size:15px;">添加条目</a></span></h5>
+                <div class="form-inline col-md-12 col-xs-12 p10" th:if="${paper.paperItem.part1Type!=null} and ${paper.paperItem.part1Type!=0}">
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">题目类型&nbsp;</label>
+                            <div class="col-xs-6">
+                                <!-- 提交的是试卷类型的id -->
+                                <select class="form-control" name="part1Type">
+                                    <option th:selected="${pt.typeId == paper.paperItem.part1Type}"
+                                            th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试题数目&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part1Qty" type="text" class="form-control" placeholder="请输入试题数目"
+                                       th:value="${paper.paperItem.part1Qty}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">每题分值&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part1Mark" type="text" class="form-control" placeholder="请输入试题得分"
+                                       th:value="${paper.paperItem.part1Mark}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-inline col-md-12 col-xs-12 p10" th:if="${paper.paperItem.part2Type!=null} and ${paper.paperItem.part2Type!=0}">
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">题目类型&nbsp;</label>
+                            <div class="col-xs-6">
+                                <!-- 提交的是试卷类型的id -->
+                                <select class="form-control" name="part2Type">
+                                    <option th:selected="${pt.typeId == paper.paperItem.part2Type}"
+                                            th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试题数目&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part2Qty" type="text" class="form-control" placeholder="请输入试题数目"
+                                       th:value="${paper.paperItem.part2Qty}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">每题分值&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part2Mark" type="text" class="form-control" placeholder="请输入试题得分"
+                                       th:value="${paper.paperItem.part2Mark}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-inline col-md-12 col-xs-12 p10" th:if="${paper.paperItem.part3Type!=null} and ${paper.paperItem.part3Type!=0}">
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">题目类型&nbsp;</label>
+                            <div class="col-xs-6">
+                                <!-- 提交的是试卷类型的id -->
+                                <select class="form-control" name="part3Type">
+                                    <option th:selected="${pt.typeId == paper.paperItem.part3Type}"
+                                            th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试题数目&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part3Qty" type="text" class="form-control" placeholder="请输入试题数目"
+                                       th:value="${paper.paperItem.part3Qty}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">每题分值&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part3Mark" type="text" class="form-control" placeholder="请输入试题得分"
+                                       th:value="${paper.paperItem.part3Mark}"/>
+                                <br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-inline col-md-12 col-xs-12 p10" th:if="${paper.paperItem.part4Type!=null} and ${paper.paperItem.part4Type!=0}">
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">题目类型&nbsp;</label>
+                            <div class="col-xs-6">
+                                <!-- 提交的是试卷类型的id -->
+                                <select class="form-control" name="part4Type">
+                                    <option th:selected="${pt.typeId == paper.paperItem.part4Type}"
+                                            th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试题数目&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part4Qty" type="text" class="form-control" placeholder="请输入试题数目"
+                                       th:value="${paper.paperItem.part4Qty}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">每题分值&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part4Mark" type="text" class="form-control" placeholder="请输入试题得分"
+                                       th:value="${paper.paperItem.part4Mark}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-inline col-md-12 col-xs-12 p10" th:if="${paper.paperItem.part5Type!=null} and ${paper.paperItem.part5Type!=0}">
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">题目类型&nbsp;</label>
+                            <div class="col-xs-6">
+                                <!-- 提交的是试卷类型的id -->
+                                <select class="form-control" name="part5Type">
+                                    <option th:selected="${pt.typeId == paper.paperItem.part5Type}"
+                                            th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试题数目&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part5Qty" type="text" class="form-control" placeholder="请输入试题数目"
+                                       th:value="${paper.paperItem.part5Qty}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">每题分值&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part5Mark" type="text" class="form-control" placeholder="请输入试题得分"
+                                       th:value="${paper.paperItem.part5Mark}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-inline col-md-12 col-xs-12 p10" th:if="${paper.paperItem.part6Type!=null} and ${paper.paperItem.part6Type!=0}">
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">题目类型&nbsp;</label>
+                            <div class="col-xs-6">
+                                <!-- 提交的是试卷类型的id -->
+                                <select class="form-control" name="part6Type">
+                                    <option th:selected="${pt.typeId == paper.paperItem.part6Type}"
+                                            th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试题数目&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part6Qty" type="text" class="form-control" placeholder="请输入试题数目"
+                                       th:value="${paper.paperItem.part6Qty}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">每题分值&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part6Mark" type="text" class="form-control" placeholder="请输入试题得分"
+                                       th:value="${paper.paperItem.part6Mark}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-inline col-md-12 col-xs-12 p10" th:if="${paper.paperItem.part7Type!=null} and ${paper.paperItem.part7Type!=0}">
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">题目类型&nbsp;</label>
+                            <div class="col-xs-6">
+                                <!-- 提交的是试卷类型的id -->
+                                <select class="form-control" name="part7Type">
+                                    <option th:selected="${pt.typeId == paper.paperItem.part7Type}"
+                                            th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试题数目&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part7Qty" type="text" class="form-control" placeholder="请输入试题数目"
+                                       th:value="${paper.paperItem.part7Qty}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">每题分值&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part7Mark" type="text" class="form-control" placeholder="请输入试题得分"
+                                       th:value="${paper.paperItem.part7Mark}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-inline col-md-12 col-xs-12 p10" th:if="${paper.paperItem.part8Type!=null} and ${paper.paperItem.part8Type!=0}">
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">题目类型&nbsp;</label>
+                            <div class="col-xs-6">
+                                <!-- 提交的是试卷类型的id -->
+                                <select class="form-control" name="part8Type">
+                                    <option th:selected="${pt.typeId == paper.paperItem.part8Type}"
+                                            th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">试题数目&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part8Qty" type="text" class="form-control" placeholder="请输入试题数目"
+                                       th:value="${paper.paperItem.part8Qty}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal col-xs-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-3 p0">每题分值&nbsp;</label>
+                            <div class="col-xs-6">
+                                <input name="part8Mark" type="text" class="form-control" placeholder="请输入试题得分"
+                                       th:value="${paper.paperItem.part8Mark}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="moreItem"></div>
+                <br/>
+                <div class="col-md-12 col-xs-12 p10" align="center">
+                    <button type="submit" class="btn btn-primary">修改</button>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="#" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+<script type="text/javascript" src="#" th:src="@{/webjars/popper.js/1.11.1/dist/umd/popper.js}"></script>
+<script type="text/javascript" src="#" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
+<script type="text/javascript">
+    $(function () {
+
+        var clickNum = $("#paperItemCount").val();
+
+        $("#addItem").click(function () {
+            clickNum++;
+            console.log(clickNum);
+            /*<![CDATA[*/
+            if (clickNum <= 8) {
+                addItemPart(clickNum);
+            } else {
+                return false;
+            }
+            /*]]>*/
+        });
+
+        function addItemPart(cn) {
+            $("#moreItem").append('<div class="form-inline col-md-12 col-xs-12 p10">' +
+                '<div class="form-horizontal col-xs-4 col-lg-4">' +
+                '<div class="form-group">' +
+                '<label class="control-label col-xs-3 p0">题目类型&nbsp;</label>' +
+                '<div class="col-xs-6">' +
+                '<select class="form-control" name="part' + cn +'Type">' +
+                '<option selected="selected" value="0">-----请选择类型-----</option>' +
+                '<option th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option></select></div></div></div>' +
+                '<div class="form-horizontal col-xs-4 col-lg-4">' +
+                '<div class="form-group">' +
+                '<label class="control-label col-xs-3 p0">试题数目&nbsp;</label>' +
+                '<div class="col-xs-6">' +
+                '<input name="part' + cn + 'Qty" type="text" class="form-control" placeholder="请输入试题数目"/></div></div></div>' +
+                '<div class="form-horizontal col-xs-4 col-lg-4">' +
+                '<div class="form-group">' +
+                '<label class="control-label col-xs-3 p0">每题分值&nbsp;</label>' +
+                '<div class="col-xs-6">' +
+                '<input name="part' + cn + 'Mark" type="text" class="form-control" placeholder="请输入试题得分"/></div></div></div></div>');
+        }
+    });
+</script>
+<!-- Icons -->
+<script type="text/javascript" src="#" th:src="@{/asserts/js/feather.min.js}"></script>
+<script>
+    feather.replace()
+</script>
+
+</body>
+
+</html>
