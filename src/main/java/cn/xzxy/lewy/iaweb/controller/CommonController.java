@@ -6,6 +6,7 @@ import cn.xzxy.lewy.iaweb.service.PaperService;
 import cn.xzxy.lewy.iaweb.service.SubmissionService;
 import cn.xzxy.lewy.iaweb.service.UserService;
 import cn.xzxy.lewy.iaweb.util.MyMessage;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,7 @@ public class CommonController {
     //来到主页面
     @GetMapping("/toHomePage")
     public String toAddPage(Model model) {
+
         //理论上根据用户id获取所有试卷
         //获取的试卷将展示在下拉框中
         //用户部分暂时先不做，后面再完善

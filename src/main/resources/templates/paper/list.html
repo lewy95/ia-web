@@ -57,6 +57,14 @@
                     </tbody>
                 </table>
             </div>
+            <div>
+                <ul class="pagination pagination-lg">
+                    <li><a th:href="@{/papers(start=0)}">首页</a>&nbsp;&nbsp;</li>
+                    <li><a th:if="${not papers.isFirst()}" th:href="@{/papers(start=${papers.number - 1})}">上一页</a>&nbsp;&nbsp;</li>
+                    <li><a th:if="${not papers.isLast()}" th:href="@{/papers(start=${papers.number + 1})}">下一页</a>&nbsp;&nbsp;</li>
+                    <li><a th:href="@{/papers(start=${papers.totalPages - 1})}">末页</a></li>
+                </ul>
+            </div>
         </main>
 
         <form id="deletePaperForm" method="post">

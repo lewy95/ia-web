@@ -2,6 +2,10 @@ package cn.xzxy.lewy.iaweb.service;
 
 import cn.xzxy.lewy.iaweb.dao.PaperDao;
 import cn.xzxy.lewy.iaweb.pojo.Paper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,6 +19,11 @@ public class PaperService {
 
     public List<Paper> getAll() {
         return paperDao.findAll();
+    }
+
+    public Page<Paper> getAllByPage(int start, int limit) {
+        Pageable pageable = new PageRequest(start, limit, Sort.Direction.DESC, "id");
+        return paperDao.findAll(pageable);
     }
 
     public void savePaper(Paper paper) {

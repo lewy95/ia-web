@@ -13,8 +13,11 @@ public class ItemTypeService {
     @Resource
     ItemTypeDao itemTypeDao;
 
-
     public List<ItemType> getAll() {
         return itemTypeDao.findAll();
+    }
+
+    public ItemType getByItc(Integer tc) {
+        return itemTypeDao.findByTypeId(tc);
     }
 }

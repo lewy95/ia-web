@@ -33,8 +33,8 @@
                 2、页面创建一个post表单
                 3、创建一个input项，name="_method";值就是我们指定的请求方式
                 -->
-                <input type="hidden" name="_method" value="put" th:if="${paper!=null}"/>
-                <input type="hidden" name="id" th:if="${paper!=null}" th:value="${paper.id}"/>
+                <!--<input type="hidden" name="_method" value="put" th:if="${paper!=null}"/>-->
+                <!--<input type="hidden" name="id" th:if="${paper!=null}" th:value="${paper.id}"/>-->
                 <h5>试卷基本信息</h5>
                 <div class="form-inline col-md-12 col-xs-12 p10">
                     <div class="form-horizontal col-xs-4 col-lg-4">
@@ -42,8 +42,7 @@
                             <label class="control-label col-xs-3 p0">试卷编号&nbsp;</label>
                             <div class="col-xs-6">
                                 <input name="paperCode" type="text" class="form-control" readonly="readonly"
-                                       placeholder=""
-                                       th:value="${paper!=null}?${paper.paperCode}:${pcode}"/>
+                                       placeholder="" th:value="${pcode}"/>
                             </div>
                         </div>
                     </div>
@@ -52,8 +51,7 @@
                         <div class="form-group">
                             <label class="control-label col-xs-3 p0">试卷名称&nbsp;</label>
                             <div class="col-xs-6">
-                                <input name="paperName" type="text" class="form-control" placeholder="请输入试卷名称"
-                                       th:value="${paper!=null}?${paper.paperName}"/>
+                                <input name="paperName" type="text" class="form-control" placeholder="请输入试卷名称"/>
                             </div>
                         </div>
                     </div>
@@ -61,8 +59,7 @@
                         <div class="form-group">
                             <label class="control-label col-xs-3 p0">试卷科目&nbsp;</label>
                             <div class="col-xs-6">
-                                <input name="paperMajor" type="text" class="form-control" placeholder="请输入试卷科目"
-                                       th:value="${paper!=null}?${paper.paperMajor}"/>
+                                <input name="paperMajor" type="text" class="form-control" placeholder="请输入试卷科目"/>
                             </div>
                         </div>
                     </div>
@@ -73,8 +70,7 @@
                         <div class="form-group">
                             <label class="control-label col-xs-3 p0">出题人名&nbsp;</label>
                             <div class="col-xs-6">
-                                <input name="paperDesigner" type="text" class="form-control" placeholder="请输入出题人姓名"
-                                       th:value="${paper!=null}?${paper.paperDesigner}"/>
+                                <input name="paperDesigner" type="text" class="form-control" placeholder="请输入出题人姓名"/>
                             </div>
                         </div>
                     </div>
@@ -82,8 +78,7 @@
                         <div class="form-group">
                             <label class="control-label col-xs-3 p0">考试时间&nbsp;</label>
                             <div class="col-xs-6">
-                                <input name="paperTesttime" type="text" class="form-control" placeholder="请输入考试时间"
-                                       th:value="${paper!=null}?${paper.paperTesttime}"/>
+                                <input name="paperTesttime" type="text" class="form-control" placeholder="请输入考试时间"/>
                             </div>
                         </div>
                     </div>
@@ -91,8 +86,7 @@
                         <div class="form-group">
                             <label class="control-label col-xs-3 p0">所属单位&nbsp;</label>
                             <div class="col-xs-6">
-                                <input name="paperAffiliate" type="text" class="form-control" placeholder="请输入所属单位"
-                                       th:value="${paper!=null}?${paper.paperAffiliate}"/>
+                                <input name="paperAffiliate" type="text" class="form-control" placeholder="请输入所属单位"/>
                             </div>
                         </div>
                     </div>
@@ -107,6 +101,7 @@
                             <div class="col-xs-6">
                                 <!-- 提交的是试卷类型的id -->
                                 <select class="form-control" name="part1Type">
+                                    <option selected="selected" value="0">-----请选择类型------</option>
                                     <option th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option>
                                 </select>
                             </div>
@@ -122,7 +117,7 @@
                     </div>
                     <div class="form-horizontal col-xs-4 col-lg-4">
                         <div class="form-group">
-                            <label class="control-label col-xs-3 p0">试题分值&nbsp;</label>
+                            <label class="control-label col-xs-3 p0">每题分值&nbsp;</label>
                             <div class="col-xs-6">
                                 <input name="part1Mark" type="text" class="form-control" placeholder="请输入试题得分"/>
                             </div>
@@ -133,7 +128,7 @@
                 <div id="moreItem"></div>
                 <br/>
                 <div class="col-md-12 col-xs-12 p10" align="center">
-                    <button type="submit" class="btn btn-primary" th:text="${paper!=null}?'修改':'添加'">添加</button>
+                    <button type="submit" class="btn btn-primary">添加</button>
                 </div>
             </form>
         </main>
@@ -148,26 +143,40 @@
 <script type="text/javascript" src="#" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
 <script type="text/javascript">
     $(function () {
+        var clickNum = 1;
+
         $("#addItem").click(function () {
-            console.log("yes clicked");
+            clickNum++;
+            console.log(clickNum);
+            /*<![CDATA[*/
+            if (clickNum <= 8) {
+                addItemPart(clickNum);
+            } else {
+                return false;
+            }
+            /*]]>*/
+        });
+
+        function addItemPart(cn) {
             $("#moreItem").append('<div class="form-inline col-md-12 col-xs-12 p10">' +
                 '<div class="form-horizontal col-xs-4 col-lg-4">' +
                 '<div class="form-group">' +
                 '<label class="control-label col-xs-3 p0">题目类型&nbsp;</label>' +
                 '<div class="col-xs-6">' +
-                '<select class="form-control" name="part2Type">' +
+                '<select class="form-control" name="part' + cn +'Type">' +
+                '<option selected="selected" value="0">-----请选择类型-----</option>' +
                 '<option th:value="${pt.typeId}" th:each="pt:${ptypes}" th:text="${pt.typeName}"></option></select></div></div></div>' +
                 '<div class="form-horizontal col-xs-4 col-lg-4">' +
                 '<div class="form-group">' +
                 '<label class="control-label col-xs-3 p0">试题数目&nbsp;</label>' +
                 '<div class="col-xs-6">' +
-                '<input name="part2Qty" type="text" class="form-control" placeholder="请输入试题数目"/></div></div></div>' +
+                '<input name="part' + cn + 'Qty" type="text" class="form-control" placeholder="请输入试题数目"/></div></div></div>' +
                 '<div class="form-horizontal col-xs-4 col-lg-4">' +
                 '<div class="form-group">' +
-                '<label class="control-label col-xs-3 p0">试题分值&nbsp;</label>' +
+                '<label class="control-label col-xs-3 p0">每题分值&nbsp;</label>' +
                 '<div class="col-xs-6">' +
-                '<input name="part2Mark" type="text" class="form-control" placeholder="请输入试题得分"/></div></div></div></div><br/>');
-        });
+                '<input name="part' + cn + 'Mark" type="text" class="form-control" placeholder="请输入试题得分"/></div></div></div></div><br/>');
+        }
     });
 </script>
 <!-- Icons -->

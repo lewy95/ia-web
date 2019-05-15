@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ItemTypeDao extends JpaRepository<ItemType, Integer> {
+
+    ItemType findByTypeId(Integer tc);
 }

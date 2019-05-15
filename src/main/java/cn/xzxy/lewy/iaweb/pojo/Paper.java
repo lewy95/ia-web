@@ -110,6 +110,7 @@ public class Paper {
                 ", paperDesigner='" + paperDesigner + '\'' +
                 ", paperTesttime='" + paperTesttime + '\'' +
                 ", paperAffiliate='" + paperAffiliate + '\'' +
+                ", paperItem=" + paperItem +
                 '}';
     }
 }
