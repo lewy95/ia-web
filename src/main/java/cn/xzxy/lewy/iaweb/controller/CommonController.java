@@ -6,7 +6,6 @@ import cn.xzxy.lewy.iaweb.service.PaperService;
 import cn.xzxy.lewy.iaweb.service.SubmissionService;
 import cn.xzxy.lewy.iaweb.service.UserService;
 import cn.xzxy.lewy.iaweb.util.MyMessage;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -16,4 +16,8 @@ public class ItemFpgService {
     public List<ItemFpg> getByPCodeAndCreate(String paperCode, String submitTime) {
         return itemFpgDao.findByPCodeAndCreate(paperCode, submitTime);
     }
+
+    public List<ItemFpg> getAllByPCodeAndCreate(String paperCode, String createTime) {
+        return itemFpgDao.findAllByPaperCodeAndCreateTime(paperCode, createTime);
+    }
 }

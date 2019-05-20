@@ -48,8 +48,9 @@
                         <td>
                             <!--<a class="btn btn-sm btn-primary" th:href="@{/emp/}+${emp.id}">编辑</a>-->
                             <a class="btn btn-sm btn-info text-white">开始分析</a>
-                            <!--<button th:attr="del_uri=@{/emp/}+${emp.id}" class="btn btn-sm btn-danger deleteBtn">删除</button>-->
-                            <button class="btn btn-sm btn-danger deleteBtn">删除</button>
+                            <button th:attr="del_uri=@{/submission/}+${sbm.id}" class="btn btn-sm btn-danger deleteBtn">
+                                删除
+                            </button>
                         </td>
                     </tr>
                     </tbody>
@@ -85,7 +86,9 @@
                         <td>
                             <!--<a class="btn btn-sm btn-primary" th:href="@{/emp/}+${emp.id}">编辑</a>-->
                             <a class="btn btn-sm btn-success text-white" th:href="@{/submission/}+${sbm.id}">查看详情</a>
-                            <button class="btn btn-sm btn-danger deleteBtn">删除</button>
+                            <button th:attr="del_uri=@{/submission/}+${sbm.id}" class="btn btn-sm btn-danger deleteBtn">
+                                删除
+                            </button>
                         </td>
                     </tr>
                     </tbody>
@@ -101,17 +104,17 @@
             </div>
         </main>
 
-        <!--
-        <form id="deleteEmpForm"  method="post">
+        <!--<form id="deleteRecForm1" method="post">-->
+            <!--<input type="hidden" name="_method" value="delete"/>-->
+        <!--</form>-->
+
+        <form id="deleteRecForm" method="post">
             <input type="hidden" name="_method" value="delete"/>
         </form>
-        -->
+
     </div>
 </div>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
 <script type="text/javascript" src="#" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
 <script type="text/javascript" src="#" th:src="@{/webjars/popper.js/1.11.1/dist/umd/popper.js}"></script>
 <script type="text/javascript" src="#" th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.js}"></script>
@@ -120,6 +123,15 @@
 <script type="text/javascript" src="#" th:src="@{/asserts/js/feather.min.js}"></script>
 <script>
     feather.replace()
+</script>
+<script>
+    $(".deleteBtn").click(function () {
+        //删除当前试卷
+        if (confirm("确定要删除吗？")) {
+            $("#deleteRecForm").attr("action", $(this).attr("del_uri")).submit();
+        }
+        return false;
+    });
 </script>
 </body>
 </html>

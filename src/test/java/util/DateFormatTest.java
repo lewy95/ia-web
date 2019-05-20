@@ -1,5 +1,6 @@
 package util;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateFormatTest {
@@ -10,13 +11,15 @@ public class DateFormatTest {
     }
 
     public static void main(String[] args) {
-        String timeStamp = timeStamp();
-        System.out.println("timeStamp=" + timeStamp); //运行输出:timeStamp=1470278082
-        System.out.println(System.currentTimeMillis());//运行输出:1470278082980
+        //String timeStamp = timeStamp();
+        //System.out.println("timeStamp=" + timeStamp); //运行输出:timeStamp=1470278082
+        //System.out.println(System.currentTimeMillis());//运行输出:1470278082980
 
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String rs= "1555355855023";
         Date date = new Date(Long.valueOf(rs));
-        System.out.println(date);
+        String parseDate = sdf.format(date);
+        String path = "hdfs://hadoop01:9000/itemdata/reportTime=" + parseDate;
+        System.out.println(path);
     }
 }

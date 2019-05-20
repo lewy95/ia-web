@@ -6,6 +6,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * 该实体类对应临时视图表，记录一个试题对应的知识点信息
+ * 用于基于试题得分数据的关联性分析，
+ * 而基于知识点得分的关联性分析不用这个实体类，用Knowledge2类
+ */
 @Entity
 @Table(name = "temp_ik_group")
 @IdClass(KnowledgeMultiKey.class)

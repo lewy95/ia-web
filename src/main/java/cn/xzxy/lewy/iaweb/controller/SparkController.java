@@ -18,7 +18,8 @@ public class SparkController {
     @ResponseBody
     public String sparkSubmit() {
         logger.info("***********************come on*********************");
-        SubmitJobToSpark.submitJob();
+        SubmitJobToSpark.submitJob("hdfs://hadoop01:9000/itemdata/reportTime=2019-04-25",
+                "915003", "1556232981122","2");
         return "thank you";
     }
 

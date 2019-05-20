@@ -37,4 +37,8 @@ public class SubmissionService {
     public void saveOne(Submission submission) {
         submissionDao.save(submission);
     }
+
+    public void deleteById(Integer id) {
+        submissionDao.delete(id);
+    }
 }
