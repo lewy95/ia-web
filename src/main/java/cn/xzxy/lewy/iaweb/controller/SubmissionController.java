@@ -69,9 +69,9 @@ public class SubmissionController {
 
     //选择指定记录进行分析
     //ajax异步处理
-    @RequestMapping(value = "/submission/{id}", method = { RequestMethod.GET, RequestMethod.POST })
+    @GetMapping(value = "/submission/analysis")
     @ResponseBody
-    public Object doAnalysis(@PathVariable("id") Integer id) {
+    public Object doAnalysis(@RequestParam(value = "analysisId") Integer id) {
         Submission submission = submissionService.getById(id);
         //拼接路径
         //路径hdfs://hadoop01:9000/itemdata/reportTime=2019-04-25
@@ -80,17 +80,27 @@ public class SubmissionController {
         Date date = new Date(Long.valueOf(nowDay));
         String parseDate = sdf.format(date);
         String path = "hdfs://hadoop01:9000/itemdata/reportTime=" + parseDate;
+        //System.out.println(path);
 
-        logger.info("submission:" + id + "is resolving...");
+//        if (path.trim().length() > 10) {
+//            return new MyMessage("0", "Success to submit, please wait");
+//        } else {
+//            return new MyMessage("1", "Fail to submit, please redo");
+//        }
+
+        logger.info("submission:" + id + " is resolving...");
         try {
             //提交spark任务
-            SubmitJobToSpark.submitJob(path,submission.getPaper().getPaperCode(), nowDay,"123");
+            SubmitJobToSpark.submitJob(path,submission.getPaper().getPaperCode(), nowDay,"1");
+            //SubmitJobToSpark2.submitJob();
             //任务处理完成后，更新记录的状态
 
-            return new MyMessage("0", "Success to submit, please wait");
+            logger.info("submission:" + id + " finished successfully...");
+            return new MyMessage("0", "Analyse Successfully, please fresh");
         } catch (Exception e) {
+            logger.info("submission:" + id + " occurred mistakes...");
             e.printStackTrace();
-            return new MyMessage("1", "Fail to submit, please redo");
+            return new MyMessage("1", "Fail to submit, please check");
         }
     }
 

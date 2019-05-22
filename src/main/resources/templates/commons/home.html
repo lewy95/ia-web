@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
-    <title>Paper Add</title>
+    <title>Home Page</title>
     <link href="#" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet"/>
     <link href="#" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet"/>
 
@@ -25,7 +25,7 @@
         <div th:replace="include/bar::sidebar(activeUri='toHomePage')"></div>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <h2>请在此填写试卷信息</h2>
+            <h2>请选择您的上传文件</h2>
             <br/>
             <br/>
             <div class="col-md-12 col-xs-12 p10" align="center">
@@ -107,8 +107,8 @@
             $.ajax({
                 type: 'post',
                 dataType: 'json',
-                url: '/iaw/uploadData',
-                //url: '/packmas-web/uploadData',
+                //url: '/iaw/uploadData',
+                url: '/packmas-web/uploadData',
                 data: formData,
                 contentType: false,
                 processData: false,
