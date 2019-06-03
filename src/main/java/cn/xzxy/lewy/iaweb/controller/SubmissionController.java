@@ -62,7 +62,7 @@ public class SubmissionController {
 
     //删除上传记录
     @DeleteMapping("/submission/{id}")
-    public String deleteSubmission(@PathVariable("id") Integer id){
+    public String deleteSubmission(@PathVariable("id") Integer id) {
         submissionService.deleteById(id);
         return "redirect:/submissions";
     }
@@ -80,23 +80,16 @@ public class SubmissionController {
         Date date = new Date(Long.valueOf(nowDay));
         String parseDate = sdf.format(date);
         String path = "hdfs://hadoop01:9000/itemdata/reportTime=" + parseDate;
-        //System.out.println(path);
-
-//        if (path.trim().length() > 10) {
-//            return new MyMessage("0", "Success to submit, please wait");
-//        } else {
-//            return new MyMessage("1", "Fail to submit, please redo");
-//        }
 
         logger.info("submission:" + id + " is resolving...");
+
         try {
             //提交spark任务
-            SubmitJobToSpark.submitJob(path,submission.getPaper().getPaperCode(), nowDay,"1");
-            //SubmitJobToSpark2.submitJob();
+            SubmitJobToSpark.submitJob(path, submission.getPaper().getPaperCode(), nowDay, "123");
             //任务处理完成后，更新记录的状态
-
+            submissionService.updateStatus(id);
             logger.info("submission:" + id + " finished successfully...");
-            return new MyMessage("0", "Analyse Successfully, please fresh");
+            return new MyMessage("0", "Analyse Successfully");
         } catch (Exception e) {
             logger.info("submission:" + id + " occurred mistakes...");
             e.printStackTrace();
@@ -157,7 +150,7 @@ public class SubmissionController {
     /**
      * 将关联性分析结果转化为知识点
      *
-     * @param itemNums  试题号集合
+     * @param itemNums 试题号集合
      * @return sb
      */
     private String transferItemFpg(String itemNums) {

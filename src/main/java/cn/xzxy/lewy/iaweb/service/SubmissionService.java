@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -40,5 +41,10 @@ public class SubmissionService {
 
     public void deleteById(Integer id) {
         submissionDao.delete(id);
+    }
+
+    @Transactional
+    public void updateStatus(Integer id) {
+        submissionDao.updateStatus(id);
     }
 }
